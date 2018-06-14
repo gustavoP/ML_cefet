@@ -5,7 +5,7 @@ def compute_cost(X, y, theta, h=None):
     """ 
     X is (m,n) vector.
     y is (m,1)
-    theta is (n,1) 
+    theta is (n,2) 
 
     optional:
     h = X@theta, if 'h' not numpy.ndarray it won't be used
@@ -15,7 +15,7 @@ def compute_cost(X, y, theta, h=None):
 
     m = float(len(y)) # ins this case len(y) = len(y[:[0]])
 
-    if (h is not None) and (type(h) is np.ndarray):
+    if (h is not None) and isinstance(h,np.ndarray):
         if h.shape != y.shape :
             raise TypeError("'h' has to be the same dimension as 'y' ")
         else:
@@ -53,7 +53,7 @@ def GD(X, y, theta, alfa, max_iter=10, tolerance=0.1, use_compute_cost = True):
     if use_compute_cost: return theta,J
     else: return theta
 
-def plot(theta, J, x):
+def plot(theta, J, x,y):
     """
     theta is the line parameters
     J is the cost funcion list
@@ -61,17 +61,34 @@ def plot(theta, J, x):
     """
     plot_x = np.sort(x[:,1])
     plot_y = theta[0,0]+theta[1,0]*plot_x
+
+    plt.figure(0)
     plt.plot(plot_x, plot_y , '-', label='Line fit', linewidth=2, markersize=12, color='#FF0000')
 
-    plt.xlabel('Size')
-    plt.ylabel('Price')
+    plt.xlabel(r'Population of city in $10^4$')
+    plt.ylabel(r'Profit in $\$10^4$')
     plt.legend(loc='best')
-    plt.figure(0)
 
+    plt.figure(1)
     plt.plot(list(range(0,len(J))), J,'-', label=r'J($\theta$)')
     plt.xlabel('Iteration')
     plt.ylabel('Cost')
     plt.legend(loc='best')
-    plt.figure(1)
+
+
+
+    plt.figure(2)
+    t0 = np.arange(-10,10,0.01)
+    t1 = np.arange(-1,4,0.01)
+    t0_m,t1_m = np.meshgrid(t0,t1)
+
+    J1=np.zeros((len(t0),len(t1)))
+    for i in range(len(t0)):
+        for j in range(len(t1)):
+            t = np.array([[t0[i]],[t1[j]]])
+            J1[i][j] = compute_cost(x,y,t)
+    
+    plt.contour(t0_m,t1_m,J1.T,levels=np.logspace(-1,4,20))
+
 
     plt.show()
