@@ -19,6 +19,8 @@ data_array = data.values
 x = data_array[:,[0,1]]
 y = data_array[:,[2]]
 
+#xn = sm.normalize(x[:,[1]])
+
 (theta, J)=sm.GD(X=x,y=y,theta =np.array([[0.0],[0.0]]),alfa = 0.001, max_iter=100)
 
 print("The estimated profit of a city with a population of {} is ${:.0f}, and for a population of {} the profit is ${:.0f}" 

@@ -92,3 +92,10 @@ def plot(theta, J, x,y):
 
 
     plt.show()
+
+def normalize(X):
+    for i in range(X.shape[1]):
+        std = np.std(X[:,[i]])
+        if std == 0: std=1
+        X[:,[i]] = (X[:,[i]] - np.average(X[:,[i]]))/std
+    return X
