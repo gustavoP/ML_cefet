@@ -76,19 +76,19 @@ def plot(theta, J, x,y):
     plt.legend(loc='best')
 
 
+    if theta.shape[0]==2:
+        plt.figure(2)
+        t0 = np.arange(-10,10,0.01)
+        t1 = np.arange(-1,4,0.01)
+        t0_m,t1_m = np.meshgrid(t0,t1)
 
-    plt.figure(2)
-    t0 = np.arange(-10,10,0.01)
-    t1 = np.arange(-1,4,0.01)
-    t0_m,t1_m = np.meshgrid(t0,t1)
-
-    J1=np.zeros((len(t0),len(t1)))
-    for i in range(len(t0)):
-        for j in range(len(t1)):
-            t = np.array([[t0[i]],[t1[j]]])
-            J1[i][j] = compute_cost(x,y,t)
-    
-    plt.contour(t0_m,t1_m,J1.T,levels=np.logspace(-1,4,20))
+        J1=np.zeros((len(t0),len(t1)))
+        for i in range(len(t0)):
+            for j in range(len(t1)):
+                t = np.array([[t0[i]],[t1[j]]])
+                J1[i][j] = compute_cost(x,y,t)
+        
+        plt.contour(t0_m,t1_m,J1.T,levels=np.logspace(-1,4,20))
 
 
     plt.show()
