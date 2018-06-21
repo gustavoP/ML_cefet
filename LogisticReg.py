@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import static_methods as sm
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize
+import scipy.optimize as opt 
 
 """
 All vector must be used in 2 dimensions as in np.array([[1, 2, 3]])
@@ -16,23 +16,39 @@ good = data[data['Passed']==1]
 bad = data[data['Passed']==0]
 
 fig, ax = plt.subplots()  
-ax.scatter(good['Exam1'], good['Exam2'], s=50, c='k', marker='+', label='Admitted')  
-ax.scatter(bad['Exam1'], bad['Exam2'], s=50, c='y', marker='o', label='Not Admitted')  
+ax.scatter(good['Exam1'], good['Exam2'], s=50, c='g', marker='o', label='Admitted')  
+ax.scatter(bad['Exam1'], bad['Exam2'], s=50, c='y', marker='x', label='Not Admitted')  
 ax.legend()  
 ax.set_xlabel('Exam 1 Score')  
 ax.set_ylabel('Exam 2 Score')  
 
-initial_theta = np.zeros((3,1))
+# set X (training data) and y (target variable)
+cols = data.shape[1]  
+X = data.iloc[:,0:cols-1]  
+y = data.iloc[:,cols-1:cols]
 
-X=data.values[:,[0,1,2]]
-y=data.values[:,[3]]
+# convert to numpy arrays and initalize the parameter array theta
+X = np.array(X.values)  
+y = np.array(y.values)  
+theta = np.zeros(3)  
 
-theta, j = sm.GD_logsitoc(X=X,y=y,theta = initial_theta,alfa=0.1)
-sm.plot_logistic(X=X,y=y, theta=theta)
+print(sm.compute_cost_logistic(theta,X,y))
+
+result = opt.fmin_tnc(func=sm.compute_cost_logistic, x0=theta, fprime=sm.grad_logistic, args=(X, y))  
+
+# Test case 45 ans 85
+print(sm.predict_logistic(np.array([result[0]]),np.array([[1,45,85]])))
+
+pred = sm.predict_logistic(np.array([result[0]]),X)
+acerto = sm.accuracy(pred=pred, y=y)
+print("Prediction rate {}%".format(acerto*100))
+
+sm.plot_logistic(theta=np.array([result[0]]).T)
+
+plt.ylim(np.min(X[:,1]),np.max(X[:,1]))
+plt.xlim(np.min(X[:,2]),np.max(X[:,2]))
 plt.show()
 
 
 #print(sm.compute_cost_logistic(X,y=y,theta = initial_theta))
 
-
-res = minimize(sm.compute_cost_logistic, initial_theta, args=(X,y), method=None, jac=sm.Grad_logsitoc, options={'maxiter':400})
