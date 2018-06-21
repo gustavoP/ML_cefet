@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import static_methods as sm
+import static_methods_Logistic as sml
 import matplotlib.pyplot as plt
 import scipy.optimize as opt 
 
@@ -32,18 +33,20 @@ X = np.array(X.values)
 y = np.array(y.values)  
 theta = np.zeros(3)  
 
-print(sm.compute_cost_logistic(theta,X,y))
+print(sml.compute_cost_logistic(theta,X,y))
 
-result = opt.fmin_tnc(func=sm.compute_cost_logistic, x0=theta, fprime=sm.grad_logistic, args=(X, y))  
+result = opt.fmin_tnc(func=sml.compute_cost_logistic, x0=theta, fprime=sml.grad_logistic, args=(X, y))  
 
 # Test case 45 ans 85
-print(sm.predict_logistic(np.array([result[0]]),np.array([[1,45,85]])))
+z=np.array([[1,45,85]])@ np.array([result[0]]).T
+print("If you take 45 in Exam 1 and 85 in Exam 2 you have {:.2%} chance to be admitted"
+    .format( sml.sigmoid(z[0,0]) )) 
 
-pred = sm.predict_logistic(np.array([result[0]]),X)
-acerto = sm.accuracy(pred=pred, y=y)
-print("Prediction rate {}%".format(acerto*100))
+pred = sml.predict_logistic(np.array([result[0]]),X)
+acerto = sml.accuracy(pred=pred, y=y)
+print("Prediction rate {:.2%}".format(acerto))
 
-sm.plot_logistic(theta=np.array([result[0]]).T)
+sml.plot_logistic(theta=np.array([result[0]]).T)
 
 plt.ylim(np.min(X[:,1]),np.max(X[:,1]))
 plt.xlim(np.min(X[:,2]),np.max(X[:,2]))
