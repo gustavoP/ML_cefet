@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import PolynomialFeatures
+
 
 def compute_cost(X, y, theta, h=None):
     """ 
@@ -61,18 +63,18 @@ def plot(theta, J, x,y):
     """
     plot_x = np.sort(x[:,1])
     plot_y = theta[0,0]+theta[1,0]*plot_x
-
+    
     plt.figure(0)
-    plt.plot(plot_x, plot_y , '-', label='Line fit', linewidth=2, markersize=12, color='#FF0000')
-
-    plt.xlabel(r'Population of city in $10^4$')
-    plt.ylabel(r'Profit in $\$10^4$')
-    plt.legend(loc='best')
-
-    plt.figure(1)
     plt.plot(list(range(0,len(J))), J,'-', label=r'J($\theta$)')
     plt.xlabel('Iteration')
     plt.ylabel('Cost')
+    plt.legend(loc='best')
+
+
+    plt.figure(1)
+    plt.plot(plot_x, plot_y , '-', label='Line fit', linewidth=2, markersize=12, color='#FF0000')
+    plt.xlabel(r'Population of city in $10^4$')
+    plt.ylabel(r'Profit in $\$10^4$')
     plt.legend(loc='best')
 
 
@@ -89,6 +91,9 @@ def plot(theta, J, x,y):
                 J1[i][j] = compute_cost(x,y,t)
         
         plt.contour(t0_m,t1_m,J1.T,levels=np.logspace(-1,4,20))
+        plt.title("Curvas de nível da função custo")
+        plt.xlabel(r'$\theta_1$')
+        plt.ylabel(r'$\theta_0$')
 
 
     plt.show()
@@ -99,3 +104,13 @@ def normalize(X):
         #if std == 0: std=1
         X[:,[i]] = (X[:,[i]] - np.average(X[:,[i]]))/std
     return X
+
+def mapFeature(X, degree):
+    """
+    X has to have only the features, this excludes ones column.
+    Return X polynomial with ones column
+    """
+    poly = PolynomialFeatures(degree)
+    return poly.fit_transform(X)
+
+    

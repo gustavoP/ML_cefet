@@ -10,7 +10,8 @@ All vector must be used in 2 dimensions as in np.array([[1, 2, 3]])
 Not in 1 dimension as in np.array([1, 2, 3])
 """
 
-data = pd.read_csv('ex2data1.csv', header=None, names=['Exam1', 'Exam2', 'Passed'])  
+data = pd.read_csv('ex2data2.csv', header=None, names=['Exam1', 'Exam2', 'Passed'])  
+data.insert(0, 'Ones', 1)
 
 good = data[data['Passed']==1]
 bad = data[data['Passed']==0]
@@ -29,19 +30,14 @@ y = data.iloc[:,cols-1:cols]
 
 # convert to numpy arrays and initalize the parameter array theta
 X = np.array(X.values)  
-X = sm.mapFeature(X,6)
 y = np.array(y.values)  
-theta = np.zeros((X.shape[1],1))
- 
+theta = np.zeros(3)  
 
 #print(sml.compute_cost_logistic(theta,X,y))
 
-result = opt.fmin_tnc(func=sml.compute_cost_logistic, x0=theta, fprime=sml.grad_logistic, args=(X, y, 0))  
+result = opt.fmin_tnc(func=sml.compute_cost_logistic, x0=theta, fprime=sml.grad_logistic, args=(X, y))  
 
-# Test case 45 ans 85
-#z=np.array([[1,45,85]])@ np.array([result[0]]).T
-#print("If you take 45 in Exam 1 and 85 in Exam 2 you have {:.2%} chance to be admitted"
-#    .format( sml.sigmoid(z[0,0]) )) 
+
 
 pred = sml.predict_logistic(np.array([result[0]]),X)
 acerto = sml.accuracy(pred=pred, y=y)
@@ -52,7 +48,4 @@ sml.plot_logistic(theta=np.array([result[0]]).T)
 plt.ylim(np.min(X[:,1]),np.max(X[:,1]))
 plt.xlim(np.min(X[:,2]),np.max(X[:,2]))
 plt.show()
-
-
-#print(sm.compute_cost_logistic(X,y=y,theta = initial_theta))
 
