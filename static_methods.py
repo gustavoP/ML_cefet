@@ -98,12 +98,28 @@ def plot(theta, J, x,y):
 
     plt.show()
 
-def normalize(X):
-    for i in range(X.shape[1]):
-        std = np.std(X[:,[i]])
-        #if std == 0: std=1
-        X[:,[i]] = (X[:,[i]] - np.average(X[:,[i]]))/std
-    return X
+def normalize_features(X):
+    """
+    X = Features with no 'ones' columns
+
+    return:
+    Normalized X, all features
+    x_std = list of std of feature i
+    x_acg = list of avg of feture i
+    """
+    """
+    x_std=[]
+    x_avg=[]
+    for i in range(X.shape[1]): 
+        x_std[i] = np.std(X[:,[i]])
+        x_avg[i] = np.average(X[:,[i]])
+        if x_std[i] == 0: continue
+        X[:,[i]] = (X[:,[i]] - x_avg[i])/x_std[i]
+    """
+    x_avg = np.mean(X, axis=0)
+    x_std = np.std(X, axis=0)
+    X = (X - x_avg) / x_std
+    return X, x_std, x_avg
 
 def mapFeature(X, degree):
     """

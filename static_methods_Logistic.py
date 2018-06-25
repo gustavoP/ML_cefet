@@ -40,11 +40,3 @@ def predict_logistic(theta,X):
 def accuracy(pred, y):
     return (1-np.sum(np.abs(y-pred))/y.shape[0])
 
-def plot_logistic(theta):
-    plot_x = np.arange(100)
-    plot_y = (-1./theta[2,0])*(theta[0,0] + theta[1,0]*plot_x)
-
-    plt.plot(plot_x, plot_y , '-', label='Decision Boundary', linewidth=2, markersize=12, color='#FF0000')
-
-
-    
